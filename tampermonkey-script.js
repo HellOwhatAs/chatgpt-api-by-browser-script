@@ -71,62 +71,12 @@ class App {
     this.stop = false;
     log('Starting to edit or send a message');
 
-    // Check for the edit button
-    const editButton = document.querySelector(
-      'button.flex.h-9.w-9.items-center.justify-center.rounded-full.text-token-text-secondary.transition.hover\\:bg-token-main-surface-tertiary'
-    );
-    if (editButton) {
-      log('Edit button found, clicking it');
-      editButton.click();
-      await sleep(500);
-
-      // Select all text and replace with the new text
-      const textarea = document.querySelector('textarea');
-      if (textarea) {
-        log('Textarea found, replacing text');
-        textarea.value = text;
-        textarea.select();
-        const event = new Event('input', { bubbles: true });
-        textarea.dispatchEvent(event);
-
-        // Adding a small delay before pressing the send button
-        await sleep(500);
-
-        // Click the send button to send the edited message
-        const sendButton = document.querySelector(
-          'button.btn.relative.btn-primary'
-        );
-        if (sendButton) {
-          log('Send button found, clicking it');
-          sendButton.click();
-        } else {
-          log('Error: Send button not found');
-        }
-      } else {
-        log('Error: Textarea not found');
-      }
-    } else {
-      log('No edit button found, sending a new message');
-      const textarea = document.querySelector('textarea');
-      if (textarea) {
-        textarea.value = text;
-        const event = new Event('input', { bubbles: true });
-        textarea.dispatchEvent(event);
-        await sleep(500);
-        const sendButton = document.querySelector(
-          'button.mb-1.mr-1.flex.h-8.w-8.items-center.justify-center.rounded-full.bg-black.text-white.transition-colors.hover\\:opacity-70.focus-visible\\:outline-none.focus-visible\\:outline-black.disabled\\:bg-\\[\\#D7D7D7\\].disabled\\:text-\\[\\#f4f4f4\\].disabled\\:hover\\:opacity-100.dark\\:bg-white.dark\\:text-black.dark\\:focus-visible\\:outline-white.disabled\\:dark\\:bg-token-text-quaternary.dark\\:disabled\\:text-token-main-surface-secondary'
-        );
-        if (sendButton) {
-          log('Send button found, clicking it');
-          sendButton.click();
-        } else {
-          log('Error: Send button not found');
-        }
-      } else {
-        log('Error: Textarea not found');
-      }
-    }
-
+    document.querySelector("#prompt-textarea > p").innerHTML = text;
+    await sleep(500);
+    document.querySelector(
+      'button[data-testid="send-button"]'
+    ).click();
+    await sleep(1000);
     this.observeMutations();
   }
 
@@ -171,6 +121,7 @@ class App {
       );
 
       if (!stopButton) {
+        await sleep(1000);
         this.observer.disconnect();
 
         if (this.stop) return;
